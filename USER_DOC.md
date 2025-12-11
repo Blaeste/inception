@@ -102,7 +102,7 @@ If you're logged directly into the VM:
 
 **WordPress Website:**
 ```
-https://eschwart.42.fr
+https://<login>.42.fr
 ```
 *(Accept the self-signed certificate warning)*
 
@@ -125,11 +125,11 @@ make ftp
 
 ### From Your Host Machine (k1r3p15 or evaluation computer)
 
-#### Method 1: SSH Tunnel (Recommended)
+#### 1: SSH Tunnel (Recommended)
 
 Open an SSH tunnel with port forwarding:
 ```bash
-ssh -L 8443:localhost:443 -L 8080:localhost:8080 -L 8081:localhost:8081 eschwart@<VM_IP>
+ssh -L 8443:localhost:443 -L 8080:localhost:8080 -L 8081:localhost:8081 <login>@<VM_IP>
 ```
 
 Then access in your browser:
@@ -137,7 +137,7 @@ Then access in your browser:
 - **Adminer:** `http://localhost:8080`
 - **cAdvisor:** `http://localhost:8081`
 
-#### Method 2: Update WordPress URL
+#### 2: Update WordPress URL
 
 If you need to access without changing ports, update the WordPress URL:
 
@@ -150,11 +150,9 @@ make url_host
 
 When done, switch back:
 ```bash
-# Switch back to eschwart.42.fr
+# Switch back to <login>.42.fr
 make url_vm
 ```
-
-**Important:** The `url_host`/`url_vm` commands automatically flush the Redis cache to prevent redirect issues.
 
 ---
 
@@ -188,10 +186,10 @@ cat secrets/mysql_root_password.txt
 
 #### WordPress Admin Panel
 
-**URL:** `https://eschwart.42.fr/wp-admin` (or `https://localhost:8443/wp-admin`)
+**URL:** `https://<login>.42.fr/wp-admin` (or `https://localhost:8443/wp-admin`)
 
 **Credentials:**
-- **Username:** `eschwart` (defined in `srcs/.env`)
+- **Username:** `<login>` (defined in `srcs/.env`)
 - **Password:** Content of `secrets/wordpress_admin_password.txt`
 
 #### WordPress Author Account
@@ -247,7 +245,7 @@ docker exec -it mariadb mysql -u root -p
 
 3. **For WordPress passwords**, also update in WordPress admin or use WP-CLI:
    ```bash
-   docker exec wordpress wp user update eschwart --user_pass="new_password" --allow-root
+   docker exec wordpress wp user update <login> --user_pass="new_password" --allow-root
    ```
 
 ---
@@ -379,8 +377,8 @@ This shows:
 
 Verify data directories exist and contain data:
 ```bash
-ls -lh /home/eschwart/data/wordpress/
-ls -lh /home/eschwart/data/mariadb/
+ls -lh /home/<login>/data/wordpress/
+ls -lh /home/<login>/data/mariadb/
 ```
 
 Both directories should contain files (WordPress installation and MariaDB tables).
