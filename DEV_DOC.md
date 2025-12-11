@@ -47,9 +47,9 @@ git --version         # For version control
 
 2. **Create data directories:**
    ```bash
-   sudo mkdir -p /home/$USER/data/mariadb
-   sudo mkdir -p /home/$USER/data/wordpress
-   sudo chown -R $USER:$USER /home/$USER/data
+   sudo mkdir -p /home/<login>/data/mariadb
+   sudo mkdir -p /home/<login>/data/wordpress
+   sudo chown -R <login>:<login> /home/<login>/data
    ```
 
 3. **Create secrets directory:**
@@ -122,8 +122,8 @@ git --version         # For version control
 ```
 inception/
 ├── srcs/
-│   ├── .env                           # Environment variables
-│   ├── docker-compose.yml             # Container orchestration
+│   ├── .env                          # Environment variables
+│   ├── docker-compose.yml            # Container orchestration
 │   └── requirements/
 │       ├── mariadb/
 │       │   ├── Dockerfile            # MariaDB image definition
@@ -144,7 +144,7 @@ inception/
 │       │   └── Dockerfile            # Adminer database admin
 │       └── cadvisor/
 │           └── Dockerfile            # cAdvisor monitoring
-├── secrets/                           # Password files (not in git)
+├── secrets/                          # Password files (not in git)
 └── Makefile                          # Build automation
 ```
 
@@ -234,7 +234,7 @@ When you run `make up`:
 1. **Docker Compose creates network** `inception_net`
 2. **Secrets are mounted** from `../secrets/` to `/run/secrets/` in containers
 3. **Volumes are created/mounted**:
-   - Bind mounts: `/home/$USER/data/mariadb`, `/home/$USER/data/wordpress`
+   - Bind mounts: `/home/<login>/data/mariadb`, `/home/<login>/data/wordpress`
    - Named volume: `wordpress_data` (shared between WordPress and FTP)
 4. **Containers start in dependency order**:
    - MariaDB first (no dependencies)
@@ -480,17 +480,17 @@ docker inspect wordpress | grep -A 10 Mounts
 
 ```bash
 # View MariaDB data
-sudo ls -lah /home/$USER/data/mariadb/
+sudo ls -lah /home/<login>/data/mariadb/
 
 # View WordPress files
-ls -lah /home/$USER/data/wordpress/
+ls -lah /home/<login>/data/wordpress/
 
 # Edit WordPress config (if needed)
-nano /home/$USER/data/wordpress/wp-config.php
+nano /home/<login>/data/wordpress/wp-config.php
 
 # Check disk usage
-du -sh /home/$USER/data/mariadb/
-du -sh /home/$USER/data/wordpress/
+du -sh /home/<login>/data/mariadb/
+du -sh /home/<login>/data/wordpress/
 ```
 
 ### Backup and Restore Data
@@ -510,10 +510,10 @@ ls -lh ~/inception_backup/
 **Manual Backup:**
 ```bash
 # Backup MariaDB
-sudo cp -r /home/$USER/data/mariadb ~/mariadb_backup_$(date +%Y%m%d)
+sudo cp -r /home/<login>/data/mariadb ~/mariadb_backup_$(date +%Y%m%d)
 
 # Backup WordPress
-sudo cp -r /home/$USER/data/wordpress ~/wordpress_backup_$(date +%Y%m%d)
+sudo cp -r /home/<login>/data/wordpress ~/wordpress_backup_$(date +%Y%m%d)
 
 # Database dump
 docker exec mariadb mysqldump -u root -p$(cat secrets/mysql_root_password.txt) \
@@ -526,12 +526,12 @@ docker exec mariadb mysqldump -u root -p$(cat secrets/mysql_root_password.txt) \
 make down
 
 # Restore MariaDB data
-sudo rm -rf /home/$USER/data/mariadb/*
-sudo cp -r ~/mariadb_backup_YYYYMMDD/* /home/$USER/data/mariadb/
+sudo rm -rf /home/<login>/data/mariadb/*
+sudo cp -r ~/mariadb_backup_YYYYMMDD/* /home/<login>/data/mariadb/
 
 # Restore WordPress data
-sudo rm -rf /home/$USER/data/wordpress/*
-sudo cp -r ~/wordpress_backup_YYYYMMDD/* /home/$USER/data/wordpress/
+sudo rm -rf /home/<login>/data/wordpress/*
+sudo cp -r ~/wordpress_backup_YYYYMMDD/* /home/<login>/data/wordpress/
 
 # Start containers
 make up
@@ -544,8 +544,8 @@ make up
 make clean
 
 # Or manually:
-sudo rm -rf /home/$USER/data/mariadb/*
-sudo rm -rf /home/$USER/data/wordpress/*
+sudo rm -rf /home/<login>/data/mariadb/*
+sudo rm -rf /home/<login>/data/wordpress/*
 
 # Remove Docker volumes
 docker volume rm inception_wordpress_data
