@@ -91,6 +91,7 @@ Or restart the entire stack from scratch:
 ```bash
 make re    # Warning: This removes all data!
 ```
+You can use make backup and make restore to save data form WordPress (theme and content)
 
 ---
 
