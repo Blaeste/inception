@@ -400,8 +400,8 @@ The project uses two types of volumes:
 **1. Bind Mounts (Host → Container)**
 ```yaml
 volumes:
-  - /home/<user>/data/mariadb:/var/lib/mysql
-  - /home/<user>/data/wordpress:/var/www/html
+  - /home/<login>/data/mariadb:/var/lib/mysql
+  - /home/<login>/data/wordpress:/var/www/html
 ```
 
 **Purpose:** Persistent data that survives container deletion
@@ -439,7 +439,7 @@ docker inspect wordpress | grep -A 10 Mounts
 
 **MariaDB Data:**
 ```bash
-/home/<user>/data/mariadb/
+/home/<login>/data/mariadb/
 ├── aria_log_control
 ├── ib_buffer_pool
 ├── ibdata1
@@ -457,7 +457,7 @@ docker inspect wordpress | grep -A 10 Mounts
 
 **WordPress Data:**
 ```bash
-/home/<user>/data/wordpress/
+/home/<login>/data/wordpress/
 ├── index.php
 ├── wp-admin/
 ├── wp-content/
@@ -799,8 +799,8 @@ docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ngin
 | Docker Compose | `srcs/docker-compose.yml` |
 | Environment Variables | `srcs/.env` |
 | Secrets | `secrets/*.txt` |
-| MariaDB Data | `/home/<user>/data/mariadb/` |
-| WordPress Data | `/home/<user>/data/wordpress/` |
+| MariaDB Data | `/home/<login>/data/mariadb/` |
+| WordPress Data | `/home/<login>/data/wordpress/` |
 | NGINX Config | `srcs/requirements/nginx/conf/nginx.conf` |
 | WordPress Entrypoint | `srcs/requirements/wordpress/tools/entrypoint.sh` |
 | MariaDB Entrypoint | `srcs/requirements/mariadb/tools/entrypoint.sh` |
