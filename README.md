@@ -325,7 +325,7 @@ This hybrid approach provides both persistence (bind mounts) and inter-container
 
 ```
 inception/
-├── Makefile                 # Build and management commands
+├── Makefile                # Build and management commands
 ├── README.md               # This file
 ├── secrets/                # Password files (not in git)
 │   ├── mysql_root_password.txt
