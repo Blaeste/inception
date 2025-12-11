@@ -294,8 +294,8 @@ NGINX connects to WordPress via `wordpress:9000` (container name as hostname).
 **Bind Mounts** for persistent data (subject requirement):
 ```yaml
 volumes:
-  - /home/eschwart/data/mariadb:/var/lib/mysql
-  - /home/eschwart/data/wordpress:/var/www/html
+  - /home/<login>/data/mariadb:/var/lib/mysql
+  - /home/<login>/data/wordpress:/var/www/html
 ```
 - Data survives container deletion
 - Easy to backup with standard tools (`make backup` uses `sudo cp`)
