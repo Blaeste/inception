@@ -112,11 +112,6 @@ git --version         # For version control
    FTP_USER=ftp_user
    ```
 
-6. **Set up /etc/hosts (optional for local development):**
-   ```bash
-   sudo sh -c "echo '127.0.0.1 <your_login>.42.fr' >> /etc/hosts"
-   ```
-
 ### Configuration Files Overview
 
 ```
