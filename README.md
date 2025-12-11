@@ -46,8 +46,8 @@ echo "your_ftp_password" > secrets/ftp_password.txt
 
 3. **Set up data directories**:
 ```bash
-sudo mkdir -p /home/eschwart/data/mariadb
-sudo mkdir -p /home/eschwart/data/wordpress
+sudo mkdir -p /home/<login>/data/mariadb
+sudo mkdir -p /home/<login>/data/wordpress
 ```
 
 ### Building and Running
@@ -70,14 +70,14 @@ make ps       # List running containers
 ### Accessing Services
 
 **From the VM:**
-- WordPress: `https://eschwart.42.fr`
+- WordPress: `https://<login>.42.fr`
 - Adminer: `http://localhost:8080`
 - cAdvisor: `http://localhost:8081`
 - FTP: `ftp://localhost:21` (user: ftp_user)
 
 **From host machine (using SSH tunnel):**
 ```bash
-ssh -L 8443:localhost:443 -L 8080:localhost:8080 -L 8081:localhost:8081 eschwart@<VM_IP>
+ssh -L 8443:localhost:443 -L 8080:localhost:8080 -L 8081:localhost:8081 <login>@<VM_IP>
 ```
 Then access:
 - WordPress: `https://localhost:8443`
@@ -87,7 +87,7 @@ Then access:
 **Switching URLs for evaluation:**
 ```bash
 make url_host  # Switch to localhost:8443 for host access
-make url_vm    # Switch back to eschwart.42.fr
+make url_vm    # Switch back to <login>.42.fr
 ```
 
 ### Backup and Restore
@@ -125,14 +125,14 @@ make re      # Rebuild everything from scratch
 
 ### AI Usage
 
-AI (GitHub Copilot with Claude Sonnet 4.5) was used extensively throughout this project for:
+AI (GitHub Copilot with Claude Sonnet 4.5) was used throughout this project for:
 
-**Code Generation:**
-- Dockerfile creation for all services (MariaDB, WordPress, NGINX, Redis, FTP, Adminer, cAdvisor)
-- Entrypoint scripts with error handling and validation
-- Docker Compose configuration with secrets and networks
-- NGINX configuration for reverse proxy with SSL/TLS
-
+**Learning and Research:**
+- Understanding Docker secrets vs environment variables
+- Comparing Docker networks vs host networking
+- Evaluating monitoring tools (Glances vs cAdvisor)
+- Best practices for PHP-FPM and NGINX integration
+  
 **Debugging and Troubleshooting:**
 - FTP permissions issues (www-data vs ftp_user ownership)
 - Redis integration with WordPress (wp-config.php configuration)
@@ -141,17 +141,12 @@ AI (GitHub Copilot with Claude Sonnet 4.5) was used extensively throughout this 
 - Port forwarding conflicts between VS Code and SSH tunnels
 
 **Documentation:**
-- Makefile with comprehensive rules (backup, restore, URL switching)
-- This README.md structure and content
+- Makefile with rules (backup, restore, URL switching)
+- README.md structure
 - Comment explanations in configuration files
 
-**Learning and Research:**
-- Understanding Docker secrets vs environment variables
-- Comparing Docker networks vs host networking
-- Evaluating monitoring tools (Glances vs cAdvisor)
-- Best practices for PHP-FPM and NGINX integration
-
-The AI provided explanations, generated code snippets, and helped validate configurations against the project requirements. All AI-generated code was reviewed, tested, and adapted to fit the specific needs of this infrastructure.
+The AI provided explanations and helped validate configurations against the project requirements. 
+All AI-generated code was reviewed, tested, and adapted to fit the specific needs of this infrastructure.
 
 ## Project Description
 
