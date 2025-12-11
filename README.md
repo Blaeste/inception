@@ -10,10 +10,10 @@ The project implements a complete web infrastructure with:
 - **NGINX** with TLSv1.2/1.3 as a reverse proxy
 - **WordPress** with PHP-FPM for content management
 - **MariaDB** as the database server
-- **Redis** as a caching layer
-- **FTP server** (vsftpd) for file management
-- **Adminer** for database administration
-- **cAdvisor** for container monitoring
+- **Redis** as a caching layer (Bonus)
+- **FTP server** (vsftpd) for file management (Bonus)
+- **Adminer** for database administration (Bonus)
+- **cAdvisor** for container monitoring (Bonus)
 
 All services communicate through a Docker network and use Docker secrets for secure password management.
 
