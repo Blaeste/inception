@@ -1,0 +1,28 @@
+# MariaDB ======================================================================
+MYSQL_DATABASE=wordpress
+MYSQL_USER=wp_user
+
+# WordPress ====================================================================
+# WordPress database connection
+WORDPRESS_DB_HOST=mariadb
+WORDPRESS_DB_NAME=wordpress
+WORDPRESS_DB_USER=wp_user
+
+# WordPress admin account
+WORDPRESS_ADMIN_USER=eschwart
+WORDPRESS_ADMIN_EMAIL=eschwart@inception.com
+
+# WordPress test account
+WORDPRESS_USER=wpuser
+WORDPRESS_USER_EMAIL=wpuser@inception.com
+
+# WordPress site configuration
+WORDPRESS_URL=https://eschwart.42.fr
+WORDPRESS_TITLE=My Inception Site
+
+# Redis ========================================================================
+REDIS_HOST='redis'
+REDIS_PORT=6379
+
+# ftp ==========================================================================
+FTP_USER=ftp_user
