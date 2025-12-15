@@ -1,0 +1,274 @@
+# Define project name
+name: inception
+
+secrets:
+  mysql_root_password:
+    file: ../secrets/mysql_root_password.txt
+  mysql_password:
+    file: ../secrets/mysql_password.txt
+  wordpress_admin_password:
+    file: ../secrets/wordpress_admin_password.txt
+  wordpress_db_password:
+    file: ../secrets/wordpress_db_password.txt
+  wordpress_user_password:
+    file: ../secrets/wordpress_user_password.txt
+  redis_password:
+    file: ../secrets/redis_password.txt
+  ftp_password:
+    file: ../secrets/ftp_password.txt
+
+# ==============================================================================
+# SERVICES SECTION
+services:
+
+  # Setup mariadb =====
+  mariadb:
+
+    secrets:
+      - mysql_root_password
+      - mysql_password
+
+    # Path to Dockerfile
+    build:
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: mariadb
+
+    # Environement variables
+    env_file:
+      - .env
+
+    # Setup data
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+  # Setup wordpress ======
+  wordpress:
+
+    secrets:
+      - wordpress_admin_password
+      - wordpress_db_password
+      - wordpress_user_password
+      - redis_password
+
+    # Path to Dockerfile
+    build:
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: wordpress
+
+    # Environement variables
+    env_file:
+      - .env
+
+    # Dependancy - (cannot boot befor mariadb)
+    depends_on:
+      - mariadb
+
+    # Setup data
+    volumes:
+      - wordpress_data:/var/www/html
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+  # Setup nginx ======
+  nginx:
+    # Path to Dockerfile
+    build:
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: nginx
+
+    # Dependancy - (cannot boot befor wordpress)
+    depends_on:
+      - wordpress
+
+    # Setup ports
+    ports:
+      - "443:443"
+
+    # Setup data
+    volumes:
+      - wordpress_data:/var/www/html
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+  # Setup Redis ======
+  redis:
+
+    secrets:
+        - redis_password
+
+    # Path to Dockerfile
+    build:
+      context: ./requirements/redis
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: redis
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+  # Setup vsftpd ======
+  ftp:
+
+    secrets:
+        - ftp_password
+
+    # Path to Dockerfile
+    build:
+      context: ./requirements/ftp
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: ftp
+
+    # Environement variables
+    env_file:
+      - .env
+
+    # Dependancy - (cannot boot befor wordpress)
+    depends_on:
+      - wordpress
+
+    # Setup ports
+    ports:
+      - "21:21"
+      - "21000-21010:21000-21010"
+
+    # Setup data
+    volumes:
+      - wordpress_data:/var/www/html
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+  # Setup Adminer ======
+  adminer:
+
+    # Path to Dockerfile
+    build:
+      context: ./requirements/adminer
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: adminer
+
+    # Dependancy - (cannot boot befor mariadb)
+    depends_on:
+      - mariadb
+
+    # Setup ports
+    ports:
+      - "8080:8080"
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+  # Setup cAdvisor ======
+  cadvisor:
+
+    # Path to Dockerfile
+    build:
+      context: ./requirements/cadvisor
+      dockerfile: Dockerfile
+
+    # Container name
+    container_name: cadvisor
+
+    # Setup ports
+    ports:
+      - "8081:8081"
+
+    # Mount Docker socket and system paths for monitoring
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+
+    # Privileged mode to see all resources
+    privileged: true
+
+    # Setup network
+    networks:
+      - inception_net
+
+    # Rules on crash / vm reboot / docker reboot
+    restart: always
+
+# ==============================================================================
+# VOLUMES SECTION
+volumes:
+
+  mariadb_data:
+
+    # Data emplacement
+    driver: local
+
+    # Options:
+    #   type -> juste take it like it is (no convert or magic shit)
+    #   o -> mont option (here direct inside the container)
+    #   device -> real path on the VM
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/eschwart/data/mariadb
+
+  wordpress_data:
+
+    # Data emplacement
+    driver: local
+
+    # Options:
+    #   type -> juste take it like it is (no convert or magic shit)
+    #   o -> mont option (here direct inside the container)
+    #   device -> real path on the VM
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/eschwart/data/wordpress
+
+# ==============================================================================
+# NETWORK SECTION
+networks:
+
+  # Network (default bridge)
+  inception_net:
