@@ -1,0 +1,26 @@
+# Secrets - never commit passwords
+secrets/
+
+# Data volumes - local WordPress DataBases
+data/
+
+# Environment variables
+.env
+
+# Docker build cache
+.dockerignore
+
+# System files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Logs
+*.log
